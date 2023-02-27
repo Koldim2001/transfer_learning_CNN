@@ -1,4 +1,4 @@
 /chest_xray
 /preprocessed_data
-/__pycache__
+**/__pycache__/ 
 /.ipynb_checkpoints
