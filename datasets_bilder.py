@@ -1,5 +1,5 @@
 class preprocessing_func():
-    def __init__(self, size = 224):
+    def __init__(self, size = 224, RGB_presentation = False):
         import pandas as pd
         import numpy as np
         from torch.utils.data import Dataset, DataLoader
@@ -104,6 +104,15 @@ class preprocessing_func():
                 sample = np.float32(sample)
                 sample = torch.tensor(np.expand_dims(sample, axis=0)) #добавил канал 1
                 # теперь данные - тензор 1 х H x W
+                if RGB_presentation:
+                    b = sample[0]
+                    b = b.tolist()
+                    x =[]
+                    x.append(b)
+                    x.append(b)
+                    x.append(b)
+                    sample = torch.tensor(x)
+                    # теперь данные - тензор 3 х H x W
 
                 if self.transform is not None:
                     sample = self.transform(sample)
@@ -116,8 +125,13 @@ class preprocessing_func():
         df_val['label'] = df_val['class'].apply(lambda x: 1.0 if x=='pneumonia' else 0)
         df_train['label'] = df_train['class'].apply(lambda x: 1.0 if x=='pneumonia' else 0)
 
-        mean_nums, std_nums = torch.tensor([0.5455]), torch.tensor([0.2587])
+        if RGB_presentation:
+            mean_nums, std_nums = torch.tensor([0.5455, 0.5455, 0.5455]), torch.tensor([0.2587, 0.2587, 0.2587])
+        else:
+            mean_nums, std_nums = torch.tensor([0.5455]), torch.tensor([0.2587])
+
         s = size
+
         transforms_train_1 = transforms.Compose([transforms.Resize((s,s)),
                                                  transforms.RandomRotation(20),
                                                  transforms.Normalize(mean = mean_nums, std=std_nums)])
