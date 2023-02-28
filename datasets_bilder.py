@@ -1,5 +1,5 @@
 class preprocessing_func():
-    def __init__(self, size = 224, RGB_presentation = False):
+    def __init__(self, size = 224, RGB_presentation = False, easy = False):
         import pandas as pd
         import numpy as np
         from torch.utils.data import Dataset, DataLoader
@@ -168,6 +168,8 @@ class preprocessing_func():
                                                         dataset_train_2,
                                                         dataset_train_3,
                                                         dataset_train_4])
+        if easy:
+            dataset_train = dataset_train_1
 
         self.test = dataset_test
         self.train = dataset_train
