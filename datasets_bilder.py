@@ -136,6 +136,10 @@ class preprocessing_func():
                                                  transforms.RandomRotation(20),
                                                  transforms.Normalize(mean = mean_nums, std=std_nums)])
 
+        transforms_train_0 = transforms.Compose([transforms.Resize((s,s)),
+                                                 transforms.Normalize(mean = mean_nums, std=std_nums)])
+
+
         transforms_train_2 = transforms.Compose([transforms.Resize((s,s)),
                                                  transforms.RandomHorizontalFlip(p=1),
                                                  transforms.Normalize(mean = mean_nums, std=std_nums)])
@@ -163,14 +167,15 @@ class preprocessing_func():
         dataset_train_2 = MakeDataset(df_train, transform=transforms_train_2)
         dataset_train_3 = MakeDataset(df_train, transform=transforms_train_3)
         dataset_train_4 = MakeDataset(df_train, transform=transforms_train_4)
+        dataset_train_0 = MakeDataset(df_train, transform=transforms_train_0)
 
         dataset_train = torch.utils.data.ConcatDataset([dataset_train_1,
                                                         dataset_train_2,
                                                         dataset_train_3,
                                                         dataset_train_4])
         if easy:
-            dataset_train = dataset_train_1
-
+            dataset_train = torch.utils.data.ConcatDataset([dataset_train_0,
+                                                            dataset_train_2])
         self.test = dataset_test
         self.train = dataset_train
         self.val = dataset_val
